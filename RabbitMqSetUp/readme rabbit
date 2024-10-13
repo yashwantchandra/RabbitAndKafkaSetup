@@ -1,0 +1,24 @@
+set up rabbit mq server by running these commands 
+
+Using Docker is the easiest way to get RabbitMQ up and running locally without manually managing dependencies.
+
+	1.	Install Docker (if not already installed).
+	•	For Docker Desktop, follow the installation instructions for your platform (Windows, Mac, Linux).
+	2.	Run RabbitMQ in a Docker Container:
+	
+    You can pull the RabbitMQ image from Docker Hub and run it as a container:
+
+    docker run -d --hostname my-rabbit --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+    This command runs RabbitMQ with the management plugin enabled, allowing you to use a web UI at http://localhost:15672.
+	The RabbitMQ broker itself will be available at localhost:5672.
+
+
+    3.	Access RabbitMQ Management UI:
+		Open your browser and go to http://localhost:15672.
+		Default credentials:
+		Username: guest
+	    Password: guest
+
+
+    

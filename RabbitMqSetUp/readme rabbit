@@ -21,4 +21,16 @@ Using Docker is the easiest way to get RabbitMQ up and running locally without m
 	    Password: guest
 
 
+---------------- 
+Notes :
+* we can use wildcards routing keys to push into multiple queues provide the exchange should be a topic 
+example purchase.* >>> this will push in all the queues with rounting key matching purchase.(anything). 
+we provide exchange name and wildcard routing key here.
+
+* we can use direct exchange to push into a single queue 
+
+* in fanout exchange push data in all the queues present in that exachange. We only provide exchange name 
+  here and empty routing key.
+
+
     

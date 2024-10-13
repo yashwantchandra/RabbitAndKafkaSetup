@@ -1,7 +1,10 @@
 package main
+
 import (
-    "log"
-    "github.com/streadway/amqp"
+	"log"
+	"time"
+
+	"github.com/streadway/amqp"
 )
 func failOnError(err error, msg string) {
     if err != nil {
@@ -31,27 +34,34 @@ func main() {
     // failOnError(err, "Failed to declare a queue")
 
     // Step 4: Consume messages from the queue
-    msgs, err := ch.Consume(
-        "query_fail", // queue
-        "",     // consumer
-        false,   // auto-ack
-        false,  // exclusive
-        false,  // no-local
-        false,  // no-wait
-        nil,    // args
-    )
-    failOnError(err, "Failed to register a consumer")
 
     // Step 5: Create a Go channel to receive the message
     forever := make(chan bool)
 
     go func() {
-        for d := range msgs {
-            log.Printf("Received a message: %s", d.Body)
-		//	d.Nack(false,false) // push into dead letter queue 
-		  //  d.Nack(false,true) // push into same queue  
-		   d.Ack(false) // acknowledge the packet 
-
+        for {
+            msgs, err := ch.Consume(
+                "query", // queue
+                "",     // consumer
+                false,   // auto-ack
+                false,  // exclusive
+                false,  // no-local
+                false,  // no-wait
+                nil,    // args
+            )
+            if err != nil {
+                log.Printf("Error consuming messages, retrying: %s", err)
+                time.Sleep(5 * time.Second) // Wait before retrying
+                continue
+            }
+    
+            // Consume the messages
+            for d := range msgs { // this loop will terminate if the channel is closed 
+                log.Printf("Received a message: %s", d.Body)
+                d.Ack(false) // Acknowledge message
+            }
+    
+            log.Println("Channel closed, attempting to reconnect...")
         }
     }()
     

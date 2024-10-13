@@ -37,8 +37,8 @@ func main() {
     // Step 4: Publish a message to the queue
     body := "Hello RabbitMQ!"
     err = ch.Publish(
-        "Buylead",          // exchange
-        "purchase.history",      // routing key (queue name)
+        "BuyleadTopic",          // exchange
+        "purchase.query",      // routing key (queue name)
         false,       // mandatory
         false,       // immediate
         amqp.Publishing{
